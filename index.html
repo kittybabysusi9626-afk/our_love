@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="#fce4ec">
+  <meta name="description" content="A dreamy, romantic digital scrapbook and love memories website for Arsh.">
+  <title>For My Favourite Person 🤍 | Arsh</title>
+
+  <!-- Google Fonts: Romantic & Elegant Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==========================================
+       BACKGROUND AMBIENT CANVAS (Floating Hearts & Sparkles)
+       ========================================== -->
+  <canvas id="ambientCanvas"></canvas>
+
+  <!-- ==========================================
+       PASSWORD PROTECTION GATE SCREEN
+       ========================================== -->
+  <div class="password-gate-screen" id="passwordGate">
+    <div class="gate-bg-glow glow-gate-1"></div>
+    <div class="gate-bg-glow glow-gate-2"></div>
+
+    <div class="gate-card glass-card" id="gateCard">
+      <!-- Cute Animated Heart-Lock Icon -->
+      <div class="gate-lock-icon" id="gateLockIcon" title="Our Secret Lock">
+        <div class="lock-shackle" id="lockShackle"></div>
+        <div class="lock-body">
+          <span class="lock-heart-symbol">🤍</span>
+        </div>
+      </div>
+
+      <div class="cute-tag">
+        <span class="tag-sparkle">✨</span>
+        <span>Private & Romantic</span>
+        <span class="tag-sparkle">✨</span>
+      </div>
+
+      <!-- Required Heading & Message -->
+      <h1 class="gate-heading">A Little Secret Just for Us 🤍</h1>
+      <p class="gate-message">Enter our secret password to unlock our memories 💌</p>
+
+      <!-- Password Entry Form -->
+      <form id="passwordForm" class="password-form" autocomplete="off">
+        <div class="password-input-group">
+          <span class="input-icon">🗝️</span>
+          <input 
+            type="password" 
+            id="gatePasswordInput" 
+            placeholder="Type our secret password..." 
+            required 
+            autofocus
+            autocomplete="current-password"
+          >
+          <button type="button" class="pwd-peek-btn" id="pwdPeekBtn" title="Show or hide password" aria-label="Toggle password visibility">
+            <span id="peekIcon">👁️</span>
+          </button>
+        </div>
+
+        <button type="submit" class="unlock-btn" id="unlockBtn">
+          <span class="unlock-btn-text">Unlock Our World</span>
+          <span class="unlock-btn-icon">💖</span>
+        </button>
+
+        <!-- Cute Error Message (Hidden by default, shown on wrong password) -->
+        <div class="gate-error-box hidden" id="gateErrorBox">
+          <span class="error-emoji">🥺</span>
+          <span class="error-text" id="gateErrorText">Oops! That's not our secret password... Think of our sweet word or special date! 🤍</span>
+        </div>
+
+        <!-- Password Hint Toggle -->
+        <div class="gate-hint-section">
+          <button type="button" class="hint-toggle-btn" id="hintToggleBtn">Need a hint? 💭</button>
+          <p class="hint-text hidden" id="hintText">Think of my favourite person's name + our special year! 🤍 (You can also change or customize this password anytime in the footer).</p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MAIN WEBSITE CONTENT (Hidden Until Unlocked)
+       ========================================== -->
+  <div class="main-website-content locked" id="mainWebsiteContent">
+
+    <!-- ==========================================
+         FLOATING MUSIC PLAYER (Always Accessible)
+         ========================================== -->
+    <div class="floating-music-container" id="floatingMusic">
+      <div class="music-pill" id="musicPill" title="Our Romantic Music Player">
+        <div class="vinyl-disc" id="vinylDisc">
+          <div class="vinyl-core"></div>
+          <span class="music-note-icon">🎵</span>
+        </div>
+        <div class="music-info-mini">
+          <span class="song-title-mini" id="miniSongTitle">Romantic Melody</span>
+          <span class="song-status-mini" id="miniSongStatus">Tap to play</span>
+        </div>
+        <button class="mini-play-btn" id="miniPlayBtn" aria-label="Play or Pause Music">
+          <svg class="play-icon" viewBox="0 0 24 24" width="20" height="20">
+            <path fill="currentColor" d="M8 5v14l11-7z"/>
+          </svg>
+          <svg class="pause-icon hidden" viewBox="0 0 24 24" width="20" height="20">
+            <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+          </svg>
+        </button>
+        <button class="expand-music-btn" id="expandMusicBtn" aria-label="Expand Music Player">
+          <span>▲</span>
+        </button>
+      </div>
+
+      <!-- Expanded Music Player Card -->
+      <div class="music-card-expanded hidden" id="musicCardExpanded">
+        <div class="expanded-header">
+          <div class="header-text">
+            <h4>Our Love Soundtrack 🎵</h4>
+            <p>Music made for us</p>
+          </div>
+          <button class="close-expanded-btn" id="closeExpandedBtn">✕</button>
+        </div>
+
+        <div class="player-body">
+          <div class="album-art-wrap">
+            <div class="album-art" id="albumArt">
+              <div class="art-heart">🤍</div>
+            </div>
+          </div>
+          <div class="track-details">
+            <h5 id="playerTrackTitle">Melody of Us</h5>
+            <p id="playerTrackArtist">Arsh & Me</p>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+          <div class="time-display">
+            <span id="currentTime">0:00</span>
+            <span id="totalDuration">2:45</span>
+          </div>
+
+          <!-- Player Controls -->
+          <div class="player-controls">
+            <button class="ctrl-btn" id="prevTrackBtn" title="Previous Song">⏮</button>
+            <button class="ctrl-btn main-play-btn" id="mainPlayBtn" title="Play / Pause">
+              <span id="mainPlayIcon">▶</span>
+            </button>
+            <button class="ctrl-btn" id="nextTrackBtn" title="Next Song">⏭</button>
+          </div>
+
+          <!-- Audio Source & Custom MP3 Upload -->
+          <div class="music-options">
+            <label class="custom-audio-upload" title="Select your own song from phone/laptop">
+              <span>📂 Pick Your Song (MP3)</span>
+              <input type="file" id="audioFileInput" accept="audio/*">
+            </label>
+            <div class="audio-mode-selector">
+              <button class="mode-chip active" id="modeSynthBtn" title="Built-in romantic piano lullaby">Acoustic Piano</button>
+              <button class="mode-chip" id="modeLocalBtn" title="Load from music/ folder">My Songs</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden native audio element for custom/local tracks -->
+    <audio id="nativeAudio" preload="auto"></audio>
+
+    <!-- ==========================================
+         FLOATING NAVIGATION BAR
+         ========================================== -->
+    <nav class="romantic-nav" id="mainNav">
+      <div class="nav-content">
+        <a href="#welcome" class="nav-link active" data-tooltip="Welcome">
+          <span class="nav-icon">✨</span>
+          <span class="nav-label">Home</span>
+        </a>
+        <a href="#gallery" class="nav-link" data-tooltip="Our Photos">
+          <span class="nav-icon">📸</span>
+          <span class="nav-label">Photos</span>
+        </a>
+        <a href="#memory-map" class="nav-link" data-tooltip="Special Places">
+          <span class="nav-icon">📍</span>
+          <span class="nav-label">Places</span>
+        </a>
+        <a href="#timeline" class="nav-link" data-tooltip="Our Journey">
+          <span class="nav-icon">🗓️</span>
+          <span class="nav-label">Timeline</span>
+        </a>
+        <a href="#moments" class="nav-link" data-tooltip="Little Moments">
+          <span class="nav-icon">💌</span>
+          <span class="nav-label">Moments</span>
+        </a>
+        <a href="#letter" class="nav-link" data-tooltip="Love Letter">
+          <span class="nav-icon">💗</span>
+          <span class="nav-label">Letter</span>
+        </a>
+        <a href="#countdown" class="nav-link" data-tooltip="Special Dates">
+          <span class="nav-icon">⏳</span>
+          <span class="nav-label">Dates</span>
+        </a>
+        <a href="#surprise" class="nav-link" data-tooltip="Final Surprise">
+          <span class="nav-icon">🎁</span>
+          <span class="nav-label">Surprise</span>
+        </a>
+        <button class="nav-link nav-lock-btn" id="lockNavBtn" title="Lock Website">
+          <span class="nav-icon">🔒</span>
+          <span class="nav-label">Lock</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ==========================================
+         SECTION 1: WELCOME SCREEN (HERO)
+         ========================================== -->
+    <header class="welcome-section" id="welcome">
+      <div class="welcome-bg-glow glow-1"></div>
+      <div class="welcome-bg-glow glow-2"></div>
+      
+      <div class="welcome-card glass-card">
+        <div class="cute-tag">
+          <span class="tag-sparkle">✨</span>
+          <span>A Special Little Secret</span>
+          <span class="tag-sparkle">✨</span>
+        </div>
+
+        <h2 class="welcome-subtitle">For My Favourite Person 🤍</h2>
+        
+        <!-- ARSH's Name Display -->
+        <div class="name-display-wrap">
+          <h1 class="arsh-title">ARSH</h1>
+          <div class="name-sparkles">
+            <span class="sparkle s1">✦</span>
+            <span class="sparkle s2">✧</span>
+            <span class="sparkle s3">✦</span>
+          </div>
+        </div>
+
+        <p class="welcome-quote">
+          "In a world full of billions of people, my eyes, my heart, and my happiest smiles will always look for you."
+        </p>
+
+        <!-- Animated Beating Heart -->
+        <div class="heart-pulse-container" id="welcomeHeart" title="Tap the beating heart!">
+          <div class="heart-halo"></div>
+          <div class="heart-halo delay"></div>
+          <div class="beating-heart">
+            <svg viewBox="0 0 32 29.6" class="heart-svg">
+              <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
+              c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+            </svg>
+            <div class="heart-inner-sparkle">✨</div>
+          </div>
+        </div>
+
+        <p class="heart-tap-prompt">Tap the heart or click below</p>
+
+        <!-- Open Button -->
+        <button class="open-world-btn" id="openWorldBtn">
+          <span class="btn-text">Open Your Little World 💌</span>
+          <span class="btn-icon">➜</span>
+        </button>
+
+        <div class="scroll-hint" id="scrollHint">
+          <span>Or scroll down to explore</span>
+          <div class="mouse-scroll-icon">
+            <div class="scroll-wheel"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==========================================
+         SECTION 2: OUR PHOTO GALLERY 📸
+         ========================================== -->
+    <section class="scrapbook-section" id="gallery">
+      <div class="section-header">
+        <div class="header-tape tape-left"></div>
+        <div class="header-tape tape-right"></div>
+        <span class="section-tag">Cherished Snaps 📸</span>
+        <h2 class="section-title">Our Photo Gallery</h2>
+        <p class="section-subtitle">Moments frozen in time, made unforgettable because I was with you.</p>
+      </div>
+
+      <!-- Gallery Toolbar -->
+      <div class="gallery-toolbar">
+        <div class="gallery-filters">
+          <button class="filter-pill active" data-filter="all">All Memories 🤍</button>
+          <button class="filter-pill" data-filter="favorites">Favorites ⭐</button>
+          <button class="filter-pill" data-filter="dates">Sweet Dates ☕</button>
+          <button class="filter-pill" data-filter="smiles">Goofy Us 🤭</button>
+        </div>
+
+        <div class="gallery-action-btns">
+          <button class="action-btn" id="startSlideshowBtn" title="Play romantic slideshow">
+            <span>▶</span> Slideshow
+          </button>
+          <button class="action-btn primary" id="addPhotoBtn" title="Add a new photo to the gallery">
+            <span>➕</span> Add Photo
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrapbook Photo Grid (Polaroid Style) -->
+      <div class="scrapbook-grid" id="photoGrid">
+        <!-- Polaroid items rendered dynamically by JavaScript -->
+      </div>
+
+      <!-- Helpful Tip for User -->
+      <div class="scrapbook-note-banner">
+        <span class="pin-icon">📌</span>
+        <p><strong>Photo Tip:</strong> Tap on any photo to view in large screen, or click the camera button on any frame to upload your own pictures directly from your phone!</p>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 3: OUR MEMORY MAP 📍
+         ========================================== -->
+    <section class="scrapbook-section map-section" id="memory-map">
+      <div class="section-header">
+        <span class="section-tag">Our Little World 📍</span>
+        <h2 class="section-title">Places That Hold Our Memories</h2>
+        <p class="section-subtitle">Every location has a story, a laugh, and a piece of my heart that belongs to you.</p>
+      </div>
+
+      <!-- Map Graphic & Header Banner -->
+      <div class="map-decorative-banner glass-card">
+        <div class="map-compass">🧭</div>
+        <div class="map-banner-text">
+          <h3>Our Personal Coordinate of Love</h3>
+          <p>From the first cafe where we talked for hours, to the places where time stood still.</p>
+        </div>
+        <button class="add-memory-place-btn" id="addPlaceBtn">
+          <span>➕</span> Add New Place
+        </button>
+      </div>
+
+      <!-- Memory Places Cards Container -->
+      <div class="places-grid" id="placesGrid">
+        <!-- Places rendered dynamically with place name, date, photo, story & Google Maps link -->
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 4: OUR RELATIONSHIP TIMELINE 🗓️
+         ========================================== -->
+    <section class="scrapbook-section timeline-section" id="timeline">
+      <div class="section-header">
+        <span class="section-tag">Chapter by Chapter 🗓️</span>
+        <h2 class="section-title">Our Romantic Timeline</h2>
+        <p class="section-subtitle">How two lives crossed paths and created the sweetest love story.</p>
+      </div>
+
+      <div class="timeline-controls">
+        <button class="action-btn primary" id="addTimelineBtn">
+          <span>➕</span> Add Milestone
+        </button>
+      </div>
+
+      <!-- Vertical Timeline Container -->
+      <div class="vertical-timeline" id="timelineContainer">
+        <div class="timeline-central-line"></div>
+        <!-- Timeline cards injected by script.js -->
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 5: OUR LITTLE MOMENTS 💌
+         ========================================== -->
+    <section class="scrapbook-section moments-section" id="moments">
+      <div class="section-header">
+        <span class="section-tag">Little Things 💌</span>
+        <h2 class="section-title">Our Little Moments</h2>
+        <p class="section-subtitle">The small, quiet, goofy moments that made me fall deeper in love with you.</p>
+      </div>
+
+      <div class="moments-grid" id="momentsGrid">
+        <!-- Editable Memory Cards with Prompts:
+             "My Favourite Memory", "The Day I Smiled the Most",
+             "A Moment I'll Never Forget", "Things That Remind Me of You", etc. -->
+      </div>
+
+      <div class="moments-add-bar">
+        <button class="action-btn primary" id="addMomentBtn">
+          <span>➕</span> Add Another Little Moment
+        </button>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 6: A LETTER FOR YOU 💗
+         ========================================== -->
+    <section class="scrapbook-section letter-section" id="letter">
+      <div class="section-header">
+        <span class="section-tag">Straight From My Heart 💗</span>
+        <h2 class="section-title">A Little Letter For You</h2>
+        <p class="section-subtitle">Take a quiet breath, tap the wax seal, and read what I keep in my heart.</p>
+      </div>
+
+      <!-- Interactive Envelope Container -->
+      <div class="envelope-wrapper" id="envelopeWrapper">
+        <div class="envelope-shadow"></div>
+        
+        <!-- Envelope Body -->
+        <div class="envelope-box" id="envelopeBox">
+          <!-- Back Fold -->
+          <div class="envelope-back"></div>
+
+          <!-- Folded Letter Inside (Slides out on open) -->
+          <div class="letter-sheet" id="letterSheet">
+            <div class="letter-paper-texture"></div>
+            <div class="letter-inner">
+              <div class="letter-header">
+                <span class="letter-date" id="letterDate">Forever & Always</span>
+                <div class="letter-stamp">💌</div>
+              </div>
+
+              <div class="letter-greeting">
+                <h3>Dearest Arsh,</h3>
+              </div>
+
+              <div class="letter-body" id="letterBodyText">
+                <!-- 💖 EDIT YOUR LETTER HERE OR VIA THE EDIT BUTTON BELOW -->
+                <p>
+                  I don't think words will ever be enough to tell you just how much you mean to me. Meeting you and having you in my life has been the sweetest, most comforting blessing.
+                </p>
+                <p>
+                  You make the ordinary days feel extraordinary. Your laughter is my absolute favorite sound, your warmth is my safest shelter, and the way you look at me makes me feel so deeply cherished.
+                </p>
+                <p>
+                  Thank you for being my teammate, my secret keeper, my comfort on hard days, and the reason behind my brightest smiles. No matter where life takes us or what tomorrow brings, I promise to always hold your hand, cheer for your dreams, and love you more with every single heartbeat.
+                </p>
+                <p>
+                  You are my person, Arsh. Today, tomorrow, and forever.
+                </p>
+              </div>
+
+              <div class="letter-signoff">
+                <p>With all my love,</p>
+                <h4 class="handwritten-sign" id="letterSign">Yours Always 🤍</h4>
+              </div>
+
+              <!-- Letter Controls inside paper -->
+              <div class="letter-actions">
+                <button class="letter-btn" id="closeLetterBtn">Fold Letter Back ✉️</button>
+                <button class="letter-btn edit" id="editLetterBtn">Edit Letter ✏️</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Front Pocket Fold -->
+          <div class="envelope-pocket"></div>
+
+          <!-- Top Triangular Flap -->
+          <div class="envelope-flap" id="envelopeFlap">
+            <!-- Wax Seal -->
+            <div class="wax-seal" id="waxSeal" title="Click to break the seal and read your letter!">
+              <div class="wax-ring"></div>
+              <div class="wax-emblem">
+                <span>A&hearts;</span>
+              </div>
+              <span class="seal-prompt">Tap Seal to Open 💌</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 7: COUNTDOWN & SPECIAL DATES ⏳
+         ========================================== -->
+    <section class="scrapbook-section countdown-section" id="countdown">
+      <div class="section-header">
+        <span class="section-tag">Every Second Matters ⏳</span>
+        <h2 class="section-title">Our Special Dates & Countdowns</h2>
+        <p class="section-subtitle">Celebrating your special day and every milestone that brought us closer.</p>
+      </div>
+
+      <div class="countdown-cards-container">
+        <!-- Birthday Countdown Card -->
+        <div class="countdown-card glass-card">
+          <div class="card-badge">🎂 Next Big Celebration</div>
+          <h3 class="countdown-heading">Arsh's Next Birthday</h3>
+          <p class="countdown-target-display" id="birthdayTargetText">Counting down to your special day!</p>
+
+          <!-- Live Countdown Numbers -->
+          <div class="timer-boxes" id="birthdayTimer">
+            <div class="timer-unit">
+              <span class="unit-val" id="bDays">00</span>
+              <span class="unit-name">Days</span>
+            </div>
+            <div class="timer-colon">:</div>
+            <div class="timer-unit">
+              <span class="unit-val" id="bHours">00</span>
+              <span class="unit-name">Hours</span>
+            </div>
+            <div class="timer-colon">:</div>
+            <div class="timer-unit">
+              <span class="unit-val" id="bMins">00</span>
+              <span class="unit-name">Mins</span>
+            </div>
+            <div class="timer-colon">:</div>
+            <div class="timer-unit">
+              <span class="unit-val" id="bSecs">00</span>
+              <span class="unit-name">Secs</span>
+            </div>
+          </div>
+
+          <button class="timer-edit-btn" id="editBirthdayBtn">
+            <span>✏️</span> Set Birthday Date
+          </button>
+        </div>
+
+        <!-- Love Counter Card (Days Together) -->
+        <div class="countdown-card glass-card">
+          <div class="card-badge">💑 How Long We've Loved Each Other</div>
+          <h3 class="countdown-heading">Our Love Journey</h3>
+          <p class="countdown-target-display" id="anniversaryTargetText">Every second has been my favorite.</p>
+
+          <!-- Live Count-Up Numbers -->
+          <div class="timer-boxes" id="loveTimer">
+            <div class="timer-unit">
+              <span class="unit-val" id="lDays">00</span>
+              <span class="unit-name">Days</span>
+            </div>
+            <div class="timer-colon">:</div>
+            <div class="timer-unit">
+              <span class="unit-val" id="lHours">00</span>
+              <span class="unit-name">Hours</span>
+            </div>
+            <div class="timer-colon">:</div>
+            <div class="timer-unit">
+              <span class="unit-val" id="lMins">00</span>
+              <span class="unit-name">Mins</span>
+            </div>
+            <div class="timer-colon">:</div>
+            <div class="timer-unit">
+              <span class="unit-val" id="lSecs">00</span>
+              <span class="unit-name">Secs</span>
+            </div>
+          </div>
+
+          <button class="timer-edit-btn" id="editAnniversaryBtn">
+            <span>✏️</span> Set Anniversary Date
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 8: FINAL SURPRISE 🎁
+         ========================================== -->
+    <section class="scrapbook-section surprise-section" id="surprise">
+      <div class="surprise-box-card glass-card">
+        <div class="surprise-gift-icon" id="surpriseGiftIcon">
+          <div class="gift-lid"></div>
+          <div class="gift-body"></div>
+          <div class="gift-ribbon"></div>
+          <div class="gift-sparkles">✨</div>
+        </div>
+
+        <span class="section-tag">Before You Go 🎁</span>
+        <h2 class="section-title">One Last Thing...</h2>
+        <p class="surprise-desc">
+          I saved the most special little surprise for the end. Are you ready, Arsh?
+        </p>
+
+        <button class="surprise-trigger-btn" id="surpriseBtn">
+          <span class="surprise-btn-text">One Last Thing... 💖</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+    <footer class="romantic-footer">
+      <div class="footer-content">
+        <p class="footer-love-text">
+          Crafted with all the love in the universe for <strong>Arsh</strong> 🤍
+        </p>
+        <p class="footer-sub">
+          Every picture, word, and note is a piece of our story.
+        </p>
+        <div class="footer-actions">
+          <button class="footer-action-btn" id="lockFooterBtn" title="Lock the website">
+            🔒 Lock Scrapbook
+          </button>
+          <button class="footer-action-btn" id="changePasswordBtn" title="Change our secret password">
+            🔑 Change Password
+          </button>
+          <button class="footer-reset-btn" id="resetDataBtn" title="Reset sample memories if needed">
+            🔄 Reset Default Memories
+          </button>
+        </div>
+      </div>
+    </footer>
+
+  </div> <!-- End #mainWebsiteContent -->
+
+
+  <!-- ==========================================
+       MODALS & LIGHTBOXES
+       ========================================== -->
+
+  <!-- 1. PHOTO LIGHTBOX MODAL -->
+  <div class="romantic-modal" id="lightboxModal">
+    <div class="modal-backdrop" id="lightboxBackdrop"></div>
+    <div class="modal-window lightbox-window">
+      <button class="modal-close-btn" id="closeLightboxBtn">✕</button>
+      <div class="lightbox-img-wrap">
+        <img src="" alt="Memory View" id="lightboxImg">
+      </div>
+      <div class="lightbox-details">
+        <span class="lightbox-date" id="lightboxDate"></span>
+        <h4 class="lightbox-title" id="lightboxTitle"></h4>
+        <p class="lightbox-caption" id="lightboxCaption"></p>
+        <div class="lightbox-heart-react">
+          <button class="heart-react-btn" id="lightboxHeartBtn">
+            <span>❤️</span> <span id="lightboxHeartCount">Loved</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. PHOTO SLIDESHOW MODAL -->
+  <div class="romantic-modal" id="slideshowModal">
+    <div class="modal-backdrop" id="slideshowBackdrop"></div>
+    <div class="modal-window slideshow-window">
+      <button class="modal-close-btn" id="closeSlideshowBtn">✕</button>
+      <div class="slideshow-slide">
+        <div class="slideshow-image-container">
+          <img src="" alt="Slideshow Image" id="slideshowImg">
+        </div>
+        <div class="slideshow-caption-box">
+          <h4 id="slideshowTitle"></h4>
+          <p id="slideshowCaption"></p>
+          <span class="slideshow-counter" id="slideshowCounter">1 / 5</span>
+        </div>
+      </div>
+      <div class="slideshow-nav">
+        <button class="slide-nav-btn prev" id="slidePrevBtn">❮</button>
+        <button class="slide-nav-btn play-pause" id="slidePlayPauseBtn">❚❚</button>
+        <button class="slide-nav-btn next" id="slideNextBtn">❯</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. ADD / EDIT PHOTO MODAL -->
+  <div class="romantic-modal" id="photoModal">
+    <div class="modal-backdrop" id="photoBackdrop"></div>
+    <div class="modal-window form-window">
+      <button class="modal-close-btn" id="closePhotoModalBtn">✕</button>
+      <h3 class="modal-title" id="photoModalTitle">Add a Cherished Photo 📸</h3>
+      <form id="photoForm" class="romantic-form">
+        <input type="hidden" id="editPhotoIndex" value="-1">
+        
+        <div class="form-group">
+          <label>Select Picture from Phone / Computer:</label>
+          <input type="file" id="formPhotoFile" accept="image/*">
+          <p class="form-hint">Or paste an image web link below:</p>
+          <input type="url" id="formPhotoUrl" placeholder="https://example.com/photo.jpg">
+          <div class="image-preview-box" id="formPhotoPreview">
+            <span>Preview will appear here</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Title / Caption:</label>
+          <input type="text" id="formPhotoCaption" placeholder="e.g. Our cute sunset date..." required>
+        </div>
+
+        <div class="form-group">
+          <label>Date or Memory Tag:</label>
+          <input type="text" id="formPhotoDate" placeholder="e.g. Autumn 2024 / That sweet evening">
+        </div>
+
+        <div class="form-group">
+          <label>Category:</label>
+          <select id="formPhotoCategory">
+            <option value="favorites">Favorites ⭐</option>
+            <option value="dates">Sweet Dates ☕</option>
+            <option value="smiles">Goofy Us 🤭</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Save Memory 🤍</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. ADD / EDIT PLACE MODAL (Memory Map) -->
+  <div class="romantic-modal" id="placeModal">
+    <div class="modal-backdrop" id="placeBackdrop"></div>
+    <div class="modal-window form-window">
+      <button class="modal-close-btn" id="closePlaceModalBtn">✕</button>
+      <h3 class="modal-title" id="placeModalTitle">Add a Special Memory Place 📍</h3>
+      <form id="placeForm" class="romantic-form">
+        <input type="hidden" id="editPlaceIndex" value="-1">
+
+        <div class="form-group">
+          <label>Place Name:</label>
+          <input type="text" id="formPlaceName" placeholder="e.g. The Rooftop Cafe / Marine Drive" required>
+        </div>
+
+        <div class="form-group">
+          <label>When We Were There:</label>
+          <input type="text" id="formPlaceDate" placeholder="e.g. October 14, 2024 / That rainy Tuesday">
+        </div>
+
+        <div class="form-group">
+          <label>Photo for this Place:</label>
+          <input type="file" id="formPlaceFile" accept="image/*">
+          <input type="url" id="formPlaceUrl" placeholder="Or enter image URL">
+          <div class="image-preview-box" id="formPlacePreview">
+            <span>Preview will appear here</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>What Happened Here? (Personal Note):</label>
+          <textarea id="formPlaceNote" rows="3" placeholder="Tell the sweet memory... e.g. You ordered extra fries and we talked until the cafe closed." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Google Maps Link (Optional):</label>
+          <input type="url" id="formPlaceMapLink" placeholder="https://maps.google.com/...">
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Save Place 📍</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. ADD / EDIT TIMELINE MILESTONE MODAL -->
+  <div class="romantic-modal" id="timelineModal">
+    <div class="modal-backdrop" id="timelineBackdrop"></div>
+    <div class="modal-window form-window">
+      <button class="modal-close-btn" id="closeTimelineModalBtn">✕</button>
+      <h3 class="modal-title" id="timelineModalTitle">Add a Milestone 🗓️</h3>
+      <form id="timelineForm" class="romantic-form">
+        <input type="hidden" id="editTimelineIndex" value="-1">
+
+        <div class="form-group">
+          <label>Milestone Title:</label>
+          <input type="text" id="formTimelineTitle" placeholder="e.g. The Day We First Spoke" required>
+        </div>
+
+        <div class="form-group">
+          <label>Date:</label>
+          <input type="text" id="formTimelineDate" placeholder="e.g. November 2024" required>
+        </div>
+
+        <div class="form-group">
+          <label>Photo (Optional):</label>
+          <input type="file" id="formTimelineFile" accept="image/*">
+          <input type="url" id="formTimelineUrl" placeholder="Or image URL">
+          <div class="image-preview-box" id="formTimelinePreview">
+            <span>Preview</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Our Story / Message:</label>
+          <textarea id="formTimelineStory" rows="3" placeholder="What made this moment unforgettable?" required></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Save Milestone 🗓️</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. ADD / EDIT LITTLE MOMENT MODAL -->
+  <div class="romantic-modal" id="momentModal">
+    <div class="modal-backdrop" id="momentBackdrop"></div>
+    <div class="modal-window form-window">
+      <button class="modal-close-btn" id="closeMomentModalBtn">✕</button>
+      <h3 class="modal-title" id="momentModalTitle">Edit Little Moment 💌</h3>
+      <form id="momentForm" class="romantic-form">
+        <input type="hidden" id="editMomentIndex" value="-1">
+
+        <div class="form-group">
+          <label>Moment Title:</label>
+          <input type="text" id="formMomentTitle" placeholder="e.g. My Favourite Memory" required>
+        </div>
+
+        <div class="form-group">
+          <label>Photo:</label>
+          <input type="file" id="formMomentFile" accept="image/*">
+          <input type="url" id="formMomentUrl" placeholder="Or image URL">
+          <div class="image-preview-box" id="formMomentPreview">
+            <span>Preview</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Your Personal Note:</label>
+          <textarea id="formMomentText" rows="4" placeholder="Write your sweet thought..." required></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Save Moment 💌</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. EDIT LOVE LETTER MODAL -->
+  <div class="romantic-modal" id="letterModal">
+    <div class="modal-backdrop" id="letterBackdrop"></div>
+    <div class="modal-window form-window">
+      <button class="modal-close-btn" id="closeLetterModalBtn">✕</button>
+      <h3 class="modal-title">Edit Your Love Letter 💗</h3>
+      <form id="letterForm" class="romantic-form">
+        <div class="form-group">
+          <label>Date / Subtitle:</label>
+          <input type="text" id="formLetterDate" placeholder="Forever & Always">
+        </div>
+        <div class="form-group">
+          <label>Letter Content (Supports paragraphs):</label>
+          <textarea id="formLetterContent" rows="8" required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Sign-off:</label>
+          <input type="text" id="formLetterSign" placeholder="Yours Always 🤍">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Update Letter 💌</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 8. EDIT DATES MODAL (Birthday & Anniversary) -->
+  <div class="romantic-modal" id="datesModal">
+    <div class="modal-backdrop" id="datesBackdrop"></div>
+    <div class="modal-window form-window">
+      <button class="modal-close-btn" id="closeDatesModalBtn">✕</button>
+      <h3 class="modal-title" id="datesModalTitle">Set Special Date ⏳</h3>
+      <form id="datesForm" class="romantic-form">
+        <input type="hidden" id="datesMode" value="birthday">
+        
+        <div class="form-group">
+          <label id="datePickerLabel">Select Date:</label>
+          <input type="date" id="formCustomDate" required>
+        </div>
+
+        <div class="form-group">
+          <label>Custom Sub-text / Note:</label>
+          <input type="text" id="formDateSubtext" placeholder="e.g. Counting down to your big day!">
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Save Date ⏳</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 9. FINAL SURPRISE MODAL -->
+  <div class="romantic-modal" id="surpriseModal">
+    <div class="modal-backdrop" id="surpriseBackdrop"></div>
+    <div class="modal-window surprise-window">
+      <button class="modal-close-btn" id="closeSurpriseModalBtn">✕</button>
+      <div class="surprise-content">
+        <div class="surprise-sparkle-ring">
+          <span class="big-heart-icon">💖</span>
+        </div>
+        <h3 class="surprise-modal-title">To My Whole World, Arsh 🤍</h3>
+        
+        <div class="surprise-modal-body">
+          <p class="highlight-p">
+            "If I had to choose all over again, through every lifetime and every universe, I would still choose you."
+          </p>
+          <p>
+            Thank you for being the gentlest, sweetest, and most handsome boy. Thank you for making me laugh until my stomach hurts, for listening to all my random stories, and for making me feel loved in every single way.
+          </p>
+          <p class="end-quote">
+            You are my greatest adventure and my safest haven. I love you, Arsh — today, tomorrow, and every day that follows. 🤍
+          </p>
+        </div>
+
+        <div class="surprise-interactive-area">
+          <button class="shower-hearts-btn" id="showerHeartsBtn">
+            <span>✨</span> Send Arsh a Shower of Hugs & Hearts!
+          </button>
+        </div>
+
+        <div class="whatsapp-share-wrap">
+          <a href="#" id="shareWhatsappBtn" class="whatsapp-btn" target="_blank" rel="noopener">
+            <span>💬</span> Tell Arsh: "I just opened our memories website! 🥰"
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. CHANGE PASSWORD MODAL -->
+  <div class="romantic-modal" id="passwordChangeModal">
+    <div class="modal-backdrop" id="passwordChangeBackdrop"></div>
+    <div class="modal-window form-window">
+      <button class="modal-close-btn" id="closePasswordChangeBtn">✕</button>
+      <h3 class="modal-title">Change Secret Password 🔑</h3>
+      <form id="passwordChangeForm" class="romantic-form">
+        <div class="form-group">
+          <label>New Secret Password:</label>
+          <input type="password" id="newPasswordInput" placeholder="Enter new secret password..." required minlength="3">
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password:</label>
+          <input type="password" id="confirmPasswordInput" placeholder="Repeat new secret password..." required minlength="3">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Update Password 🤍</button>
+        </div>
+        <div id="passwordChangeFeedback" class="password-feedback"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>
